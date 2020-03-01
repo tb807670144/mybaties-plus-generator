@@ -39,6 +39,8 @@ public class MybatiesPlusGenerator {
             return;
         }
 
+        String modelParent = properties.getProperty("model.parent", "com");
+
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
@@ -61,7 +63,7 @@ public class MybatiesPlusGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(properties.getProperty("model.name"));
-        pc.setParent(properties.getProperty("model.parent", "com"));
+        pc.setParent(modelParent);
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -83,7 +85,8 @@ public class MybatiesPlusGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + "/src/main/java/com/baomidou/" + pc.getModuleName()
+                return projectPath + properties.getProperty("output.dir", "/src/main/java") + "/"
+                        + modelParent.replace(".", "/") + "/" + pc.getModuleName()
                         + "/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
